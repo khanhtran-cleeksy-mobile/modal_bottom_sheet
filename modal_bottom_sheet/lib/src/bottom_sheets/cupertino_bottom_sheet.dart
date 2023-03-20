@@ -290,21 +290,7 @@ class _CupertinoModalTransition extends StatelessWidget {
                   alignment: Alignment.topCenter,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(radius),
-                    child: CupertinoUserInterfaceLevel(
-                      data: CupertinoUserInterfaceLevelData.elevated,
-                      child: Builder(
-                        builder: (context) => CupertinoTheme(
-                          data: createPreviousRouteTheme(
-                            context,
-                            curvedAnimation,
-                          ),
-                          child: CupertinoUserInterfaceLevel(
-                            data: CupertinoUserInterfaceLevelData.base,
-                            child: child!,
-                          ),
-                        ),
-                      ),
-                    ),
+                    child: child,
                   ),
                 ),
               ),
