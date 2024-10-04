@@ -8,7 +8,7 @@ const Duration _bottomSheetDuration = Duration(milliseconds: 400);
 
 class _ModalBottomSheet<T> extends StatefulWidget {
   const _ModalBottomSheet({
-    Key? key,
+    super.key,
     this.closeProgressThreshold,
     required this.route,
     this.secondAnimationController,
@@ -16,7 +16,8 @@ class _ModalBottomSheet<T> extends StatefulWidget {
     this.expanded = false,
     this.enableDrag = true,
     this.animationCurve,
-  }) : super(key: key);
+    this.onClosing,
+  });
 
   final double? closeProgressThreshold;
   final ModalSheetRoute<T> route;
@@ -25,6 +26,7 @@ class _ModalBottomSheet<T> extends StatefulWidget {
   final bool enableDrag;
   final AnimationController? secondAnimationController;
   final Curve? animationCurve;
+  final Function()? onClosing;
 
   @override
   _ModalBottomSheetState<T> createState() => _ModalBottomSheetState<T>();
@@ -103,6 +105,7 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
                       }
                     : null,
                 onClosing: () {
+                  widget.onClosing?.call();
                   if (widget.route.isCurrent) {
                     Navigator.of(context).pop();
                   }
@@ -137,9 +140,9 @@ class ModalSheetRoute<T> extends PageRoute<T> {
     this.bounce = false,
     this.animationCurve,
     Duration? duration,
-    RouteSettings? settings,
-  })  : duration = duration ?? _bottomSheetDuration,
-        super(settings: settings);
+    super.settings,
+    this.onClosing,
+  }) : duration = duration ?? _bottomSheetDuration;
 
   final double? closeProgressThreshold;
   final WidgetWithChildBuilder? containerBuilder;
@@ -155,6 +158,8 @@ class ModalSheetRoute<T> extends PageRoute<T> {
 
   final AnimationController? secondAnimationController;
   final Curve? animationCurve;
+
+  final Function()? onClosing;
 
   @override
   Duration get transitionDuration => duration;
@@ -204,6 +209,7 @@ class ModalSheetRoute<T> extends PageRoute<T> {
         bounce: bounce,
         enableDrag: enableDrag,
         animationCurve: animationCurve,
+        onClosing: onClosing,
       ),
     );
     return bottomSheet;
@@ -246,6 +252,7 @@ Future<T?> showCustomModalBottomSheet<T>({
   Duration? duration,
   RouteSettings? settings,
   double? closeProgressThreshold,
+  Function()? onClosing,
 }) async {
   assert(debugCheckHasMediaQuery(context));
   assert(debugCheckHasMaterialLocalizations(context));
@@ -271,6 +278,7 @@ Future<T?> showCustomModalBottomSheet<T>({
     duration: duration,
     settings: settings,
     closeProgressThreshold: closeProgressThreshold,
+    onClosing: onClosing,
   ));
   return result;
 }

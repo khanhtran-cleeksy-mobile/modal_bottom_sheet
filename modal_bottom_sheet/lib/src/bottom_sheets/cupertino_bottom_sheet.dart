@@ -42,12 +42,12 @@ class _CupertinoBottomSheetContainer extends StatelessWidget {
   final BoxShadow? shadow;
 
   const _CupertinoBottomSheetContainer({
-    Key? key,
+    super.key,
     required this.child,
     this.backgroundColor,
     required this.topRadius,
     this.shadow,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +103,7 @@ Future<T?> showCupertinoModalBottomSheet<T>({
   BoxShadow? shadow,
   SystemUiOverlayStyle? overlayStyle,
   double? closeProgressThreshold,
+  Function()? onClosing,
 }) async {
   assert(debugCheckHasMediaQuery(context));
   final hasMaterialLocalizations =
@@ -115,31 +116,33 @@ Future<T?> showCupertinoModalBottomSheet<T>({
   final result =
       await Navigator.of(context, rootNavigator: useRootNavigator).push(
     CupertinoModalBottomSheetRoute<T>(
-        builder: builder,
-        containerBuilder: (context, _, child) => _CupertinoBottomSheetContainer(
-              child: child,
-              backgroundColor: backgroundColor,
-              topRadius: topRadius,
-              shadow: shadow,
-            ),
-        secondAnimationController: secondAnimation,
-        expanded: expand,
-        closeProgressThreshold: closeProgressThreshold,
-        barrierLabel: barrierLabel,
-        elevation: elevation,
-        bounce: bounce,
-        shape: shape,
-        clipBehavior: clipBehavior,
-        isDismissible: isDismissible ?? expand == false ? true : false,
-        modalBarrierColor: barrierColor ?? Colors.black12,
-        enableDrag: enableDrag,
+      builder: builder,
+      containerBuilder: (context, _, child) => _CupertinoBottomSheetContainer(
+        child: child,
+        backgroundColor: backgroundColor,
         topRadius: topRadius,
-        animationCurve: animationCurve,
-        previousRouteAnimationCurve: previousRouteAnimationCurve,
-        duration: duration,
-        settings: settings,
-        transitionBackgroundColor: transitionBackgroundColor ?? Colors.black,
-        overlayStyle: overlayStyle),
+        shadow: shadow,
+      ),
+      secondAnimationController: secondAnimation,
+      expanded: expand,
+      closeProgressThreshold: closeProgressThreshold,
+      barrierLabel: barrierLabel,
+      elevation: elevation,
+      bounce: bounce,
+      shape: shape,
+      clipBehavior: clipBehavior,
+      isDismissible: isDismissible ?? expand == false ? true : false,
+      modalBarrierColor: barrierColor ?? Colors.black12,
+      enableDrag: enableDrag,
+      topRadius: topRadius,
+      animationCurve: animationCurve,
+      previousRouteAnimationCurve: previousRouteAnimationCurve,
+      duration: duration,
+      settings: settings,
+      transitionBackgroundColor: transitionBackgroundColor ?? Colors.black,
+      overlayStyle: overlayStyle,
+      onClosing: onClosing,
+    ),
   );
   return result;
 }
@@ -157,44 +160,30 @@ class CupertinoModalBottomSheetRoute<T> extends ModalSheetRoute<T> {
   final SystemUiOverlayStyle? overlayStyle;
 
   CupertinoModalBottomSheetRoute({
-    required WidgetBuilder builder,
-    WidgetWithChildBuilder? containerBuilder,
-    double? closeProgressThreshold,
-    String? barrierLabel,
+    required super.builder,
+    super.containerBuilder,
+    super.closeProgressThreshold,
+    super.barrierLabel,
     double? elevation,
     ShapeBorder? shape,
     Clip? clipBehavior,
-    AnimationController? secondAnimationController,
-    Curve? animationCurve,
-    Color? modalBarrierColor,
-    bool bounce = true,
-    bool isDismissible = true,
-    bool enableDrag = true,
-    required bool expanded,
-    Duration? duration,
-    RouteSettings? settings,
-    ScrollController? scrollController,
+    super.secondAnimationController,
+    super.animationCurve,
+    super.modalBarrierColor,
+    super.bounce = true,
+    super.isDismissible,
+    super.enableDrag,
+    required super.expanded,
+    super.duration,
+    super.settings,
+    super.scrollController,
     this.boxShadow = _kDefaultBoxShadow,
     this.transitionBackgroundColor,
     this.topRadius = _kDefaultTopRadius,
     this.previousRouteAnimationCurve,
     this.overlayStyle,
-  }) : super(
-          closeProgressThreshold: closeProgressThreshold,
-          scrollController: scrollController,
-          containerBuilder: containerBuilder,
-          builder: builder,
-          bounce: bounce,
-          barrierLabel: barrierLabel,
-          secondAnimationController: secondAnimationController,
-          modalBarrierColor: modalBarrierColor,
-          isDismissible: isDismissible,
-          enableDrag: enableDrag,
-          expanded: expanded,
-          settings: settings,
-          animationCurve: animationCurve,
-          duration: duration,
-        );
+    super.onClosing,
+  });
 
   @override
   Widget buildTransitions(
@@ -245,14 +234,14 @@ class _CupertinoModalTransition extends StatelessWidget {
   final Widget body;
 
   const _CupertinoModalTransition({
-    Key? key,
+    super.key,
     required this.secondaryAnimation,
     required this.body,
     required this.topRadius,
     this.backgroundColor = Colors.black,
     this.animationCurve,
     this.overlayStyle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -400,12 +389,12 @@ class CupertinoScaffold extends StatefulWidget {
   final SystemUiOverlayStyle? overlayStyle;
 
   const CupertinoScaffold({
-    Key? key,
+    super.key,
     required this.body,
     this.topRadius = _kDefaultTopRadius,
     this.transitionBackgroundColor = Colors.black,
     this.overlayStyle,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _CupertinoScaffoldState();
@@ -427,6 +416,7 @@ class CupertinoScaffold extends StatefulWidget {
     RouteSettings? settings,
     BoxShadow? shadow,
     SystemUiOverlayStyle? overlayStyle,
+    Function()? onClosing,
   }) async {
     assert(debugCheckHasMediaQuery(context));
     final isCupertinoApp =
@@ -460,6 +450,7 @@ class CupertinoScaffold extends StatefulWidget {
       duration: duration,
       settings: settings,
       overlayStyle: overlayStyle,
+      onClosing: onClosing,
     ));
     return result;
   }
