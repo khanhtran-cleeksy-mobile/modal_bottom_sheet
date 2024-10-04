@@ -105,8 +105,8 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
                       }
                     : null,
                 onClosing: () {
-                  widget.onClosing?.call();
                   if (widget.route.isCurrent) {
+                    widget.onClosing?.call();
                     Navigator.of(context).pop();
                   }
                 },
